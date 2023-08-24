@@ -56,7 +56,8 @@ class GraspNetModel:
             self.load_network(opt.which_epoch, self.is_train)
 
     def set_input(self, data):
-        input_pcs = torch.from_numpy(data['pc']).contiguous()
+        # input_pcs = torch.from_numpy(data['pc']).contiguous()
+        input_pcs = torch.from_numpy(data['pc']).contiguous().float()
         # input_grasps = torch.from_numpy(data['grasp_rt']).float()
         input_grasps = torch.from_numpy(data['grasp_qt']).float()
 
@@ -75,7 +76,7 @@ class GraspNetModel:
     def set_validation_inputs(self, data):
         input_pcs = torch.from_numpy(data['pc']).contiguous()
         # if self.opt.constrained and (self.opt.clusters or self.opt.pre_rendered_point_clouds):
-        if self.opt.clusters or self.opt.pre_rendered_point_clouds:
+        if (self.opt.clusters or self.opt.pre_rendered_point_clouds) and self.opt.arch != "evaluator":
             features = torch.from_numpy(data['features']).float()
             self.features = features.to(self.device).requires_grad_(self.is_train)
         if self.opt.arch == "evaluator":
@@ -83,7 +84,7 @@ class GraspNetModel:
             self.grasps = input_grasp_point_clouds.to(self.device).requires_grad_(
                 self.is_train)
 
-        self.pcs = input_pcs.to(self.device).requires_grad_(self.is_train)
+        self.pcs = input_pcs.to(self.device).requires_grad_(self.is_train).float()
 
     def generate_grasps(self, pcs, z=None):
         with torch.no_grad():

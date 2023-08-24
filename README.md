@@ -1,52 +1,51 @@
-# CAPGrasp
+# CAPGrasp: An SO(2) Equivariant Continuous Approach-Constrained Generative Grasp Sampler
 
-This is a Pytorch implementation of CAPGrasp: An SO(2) Equivariant Continuous Approach-Constrained Generative Grasp Sampler.
-In this repository, we provide the CAPGrasp Sampler, Evaluator, constrained grasp refinement together with the pre-trained models.
-Besides, we also provide the the object set and grasp dataset which are used for training.
+This repository contains the PyTorch implementation of CAPGrasp. We offer tools such as the CAPGrasp Sampler, Evaluator, and constrained grasp refinement, along with pre-trained models. Additionally, we provide the object set and grasp dataset essential for training.
 
-We will release the isaacgym environment that we used for evaluation soon.
+> **Note**: The IsaacGym environment used for evaluation will be released later.
+
+## Prerequisites
+
+- **Operating System**: Ubuntu 18.04 (tested), Ubuntu 20 (trained model also tested)
+- **Python**: 3.6
+- **PyTorch**: 1.10
+- **CUDA**: 10.0
 
 ## Installation
 
-The code has been tested with Python3.6, Pytorch 1.10, and CUDA 10.0 on Ubuntu 18.04. The trained model also been tested with the 
-higher version of CUDA on Ubuntu 20. Here's the instruction of environment setup.
-
-
-```shell
-1. git@github.com:wengzehang/CAPGrasp.git && cd CAPGrasp
-2. conda create -n capnet python=3.6
-3. conda activate capnet
-4. pip install --upgrade pip setuptools wheel
-5. pip install torch==1.10.0+cu102 torchvision==0.11.0+cu102 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
-6. git clone git@github.com:erikwijmans/Pointnet2_PyTorch.git
-7. cd Pointnet2_PyTorch && pip install -r requirements.txt
-8. cd .. && pip install -r requirements.txt 
-9. pip install trimesh==3.14.1
-10. download issacgym package
-11. cd isaacgym/python && pip install -e .
+To set up the environment, follow these steps:
 
 ```
+git clone git@github.com:wengzehang/CAPGrasp.git
+cd CAPGrasp
+conda create -n capnet python=3.6
+conda activate capnet
+pip install --upgrade pip setuptools wheel
+pip install torch==1.10.0+cu102 torchvision==0.11.0+cu102 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
+git clone git@github.com:erikwijmans/Pointnet2_PyTorch.git
+cd Pointnet2_PyTorch && pip install -r requirements.txt
+cd .. && pip install -r requirements.txt 
+pip install trimesh==3.14.1
+# Follow instructions to download the IsaacGym package
+cd isaacgym/python && pip install -e .
+```
 
+## Datasets
 
-## Grasp and Object Mesh Dataset
+- **Grasp Dataset**: [Download from Google Drive](https://drive.google.com/drive/folders/1D-7twxwE-PZ1QmVei5PsCHeKXhZopMLN?usp=sharing)
+- **Mesh Dataset**: [Download from Google Drive](https://drive.google.com/file/d/1BITM0ntPUNTIWthFdveoUMMblH9zaAOp/view?usp=drive_link)
 
-You can download the grasps through Google Drive:
-https://drive.google.com/drive/folders/1D-7twxwE-PZ1QmVei5PsCHeKXhZopMLN?usp=sharing
+## Pre-trained Models
 
-Same for the mesh Dataset:
-https://drive.google.com/file/d/1BITM0ntPUNTIWthFdveoUMMblH9zaAOp/view?usp=drive_link
-
-
-## Pre-trained Model:
-
-Please follow checkpoints_2d/download_checkpoints_instruction.md to download the pretrained models. If you want to train your own sampler and evaluator, we provide examples belows.
+To access the pre-trained models, refer to the instructions in `checkpoints_2d/download_checkpoints_instruction.md`. For those interested in training their own sampler and evaluator, example commands are provided below.
 
 ## Training
 
-Sampler tranining:
+### Sampler Training
 
-```shell
+Replace `$LOCALDATAPATH` with the path to the downloaded Acronym dataset.
 
+```
 python train.py \
 --dataset_root_folder $LOCALDATAPATH/grasps \
 --orientation_constrained \
@@ -64,17 +63,13 @@ python train.py \
 --latent_size 4 \
 --gpu_ids 0,1,2 \
 --equivariant
-
 ```
 
-where the `$LOCALDATAPATH` is the path to the Acronym dataset you downloaded.
+Monitor the training process using the Tensorboard log files stored in the `checkpoints_2d` directory.
 
-Tensorboard log file is store in checkpoints_2d directory for monitoring.
+### Evaluator Training
 
-Evaluator training:
-
-```shell
-
+```
 python train.py \
 --dataset_root_folder /media/zehang/LaCie/zehang/ubuntu/dataset/cong_orien_grasp_full/grasps \
 --arch evaluator \
@@ -90,13 +85,34 @@ python train.py \
 --niter_decay 300 \
 --niter 10 \
 --gpu_ids 0
-
 ```
 
-## Generate refined grasps
+## Generating Refined Grasps
 
-[coming soon]
+Utilize CAPGrasp to generate constrained, refined grasps from partially observed point clouds. The following example demonstrates loading a point cloud, centering it, sampling 200 grasps with a specified approach constraint, and refining these grasps over 20 iterations without constraint.
+
+```
+python grasp_sampler_refiner.py \
+    -cfs checkpoints_2d/vae_lr_0002_bs_300_scale_1_npoints_128_radius_02_latent_size_4_position_constrained_orientation_constrained_continuous_equivariant_clusters_prerendered_continuous_equi_regloss/ \
+    -cfe checkpoints_2d/evaluator_lr_0002_bs_200_scale_1_npoints_128_radius_02pointnet++_clusters_prerendered_0401 \
+    --gpu_ids 0
+```
+
+Here are examples of generated grasps with six different approach constraints:
+
+| ![a](demo/g1.png) | ![d](demo/g2.png) |
+|:-----------------:|:-----------------:|
+|     (1,0,0)       |     (-1,0,0)      |
+
+| ![b](demo/g3.png) | ![e](demo/g4.png) |
+|:-----------------:|:-----------------:|
+|      (0,1,0)     |     (0,-1,0)       |
+
+| ![c](demo/g5.png) | ![f](demo/g6.png) |
+|:-----------------:|:-----------------:|
+|      (0,0,1)      |     (0,0,-1)      |
+
 
 ## Evaluation in IsaacGym
 
-[coming soon]
+Details coming soon.
