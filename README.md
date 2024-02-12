@@ -1,4 +1,4 @@
-# CAPGrasp: An SO(2) Equivariant Continuous Approach-Constrained Generative Grasp Sampler
+# CAPGrasp: An R3 x SO(2) Equivariant Continuous Approach-Constrained Generative Grasp Sampler
 
 This repository contains the PyTorch implementation of CAPGrasp. We offer tools such as the CAPGrasp Sampler, Evaluator, and constrained grasp refinement, along with pre-trained models. Additionally, we provide the object set and grasp dataset essential for training.
 
@@ -9,7 +9,7 @@ This repository contains the PyTorch implementation of CAPGrasp. We offer tools 
 - **Operating System**: Ubuntu 18.04 (tested), Ubuntu 20 (trained model also tested)
 - **Python**: 3.6
 - **PyTorch**: 1.10
-- **CUDA**: 10.0
+- **CUDA**: 10.0 (CUDA 11 has also been tested)
 
 ## Installation
 
@@ -35,7 +35,7 @@ cd isaacgym/python && pip install -e .
 - **Grasp Dataset**: [Download from Google Drive](https://drive.google.com/drive/folders/1D-7twxwE-PZ1QmVei5PsCHeKXhZopMLN?usp=sharing)
 - **Mesh Dataset**: [Download from Google Drive](https://drive.google.com/file/d/1BITM0ntPUNTIWthFdveoUMMblH9zaAOp/view?usp=drive_link)
 
-## Pre-trained Models
+## Trained Models
 
 To access the pre-trained models, refer to the instructions in `checkpoints_2d/download_checkpoints_instruction.md`. For those interested in training their own sampler and evaluator, example commands are provided below.
 
