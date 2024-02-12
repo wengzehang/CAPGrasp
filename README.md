@@ -2,6 +2,8 @@
 
 This repository contains the PyTorch implementation of CAPGrasp. We offer tools such as the CAPGrasp Sampler, Evaluator, and constrained grasp refinement, along with trained models. Additionally, we provide the object partial point cloud dataset and grasp dataset essential for training.
 
+We refer the reader to [our project page](https://wengzehang.github.io/CAPGrasp/) for more details.
+
 > **Note**: The IsaacGym environment used for evaluation will be released later.
 
 ## Prerequisites
