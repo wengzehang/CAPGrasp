@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Our method learns to generate approach-constrained grasp poses for parallel-jaw grippers based on 3D partial point clouds.">
+  <meta name="keywords" content="approach-constrained,parallel-jaw,generative model">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CAPGrasp: An R3xSO(2)-equivariant Continuous Approach-Constrained Generative Grasp Sampler</title>
+
+  <meta property="og:image" content="https://3dmagicpony.github.io/resources/og_image.jpg"/>
+	<meta property="og:title" content="CAPGrasp: An R3xSO(2)-equivariant Continuous Approach-Constrained Generative Grasp Sampler" />
+	<meta property="og:description" content="Our method learns to generate approach-constrained grasp poses for parallel-jaw grippers based on 3D partial point clouds." />
+  <!-- Twitter automatically scrapes this. Go to https://cards-dev.twitter.com/validator?
+      if you update and want to force Twitter to re-scrape. -->
+  <meta property="twitter:card"          content="summary" />
+  <meta property="twitter:title"         content="CAPGrasp: An R3xSO(2)-equivariant Continuous Approach-Constrained Generative Grasp Sampler" />
+  <meta property="twitter:description"   content="Our method learns to generate approach-constrained grasp poses for parallel-jaw grippers based on 3D partial point clouds." />
+  <meta property="twitter:image"         content="https://3dmagicpony.github.io/resources/og_image.jpg" />
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VFNFH9CKNX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-VFNFH9CKNX');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <!-- <link rel="stylesheet" href="./static/css/bulma-carousel.min.css"> -->
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./resources/carousel-horse.png"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <!-- <script src="./static/js/bulma-carousel.min.js"></script> -->
+  <!-- <script src="./static/js/bulma-slider.min.js"></script> -->
+  <!-- <script src="./static/js/index.js"></script> -->
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <!-- <video id="banner" autoplay muted loop playsinline height="100%">
+          <source src="resources/carousel.mp4"
+                  type="video/mp4">
+        </video> -->
+      </div>
+      <br>
+
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-3 publication-title" style="font-size: 2.2rem;">CAPGrasp: An R3xSO(2)-equivariant Continuous Approach-Constrained Generative Grasp Sampler</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://www.kth.se/profile/zehang">Zehang Weng</a><sup>*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.kth.se/profile/haofeil">Haofei Lu</a>,
+            </span>
+            <span class="author-block">
+              <a href="https://jsll.github.io">Jens Lundell</a>,
+            </span>
+            <span class="author-block">
+              <a href="https://people.kth.se/~dani/">Danica Kragic</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Division of Robotics, Perception and Learning (RPL), KTH</span>
+          </div>
+
+          <!-- <div class="is-size-5 publication-authors">
+            <span class="author-block">(* equal contribution)</span>
+          </div> -->
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">IEEE Robotics and Automation Letters (RA-L)</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2310.12113"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://youtu.be/KoLzpESstLk"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/wengzehang/CAPGrasp.git"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="resources/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle">
+        Our method learns to generate approach-constrained grasp poses for parallel-jaw grippers based on 3D partial point clouds. We conducted our study in both simulation and real world.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We propose CAPGrasp, an equivariant 6-DoF continuous approach-constrained generative grasp sampler. It includes a novel learning strategy for training CAPGrasp that eliminates the need to curate massive conditionally labeled datasets and a constrained grasp refinement technique that improves grasp poses while respecting the grasp approach directional constraints. The experimental results demonstrate that CAPGrasp is more than three times as sample efficient as unconstrained grasp samplers while achieving up to 38% grasp success rate improvement. CAPGrasp also achieves 4-10% higher grasp success rates than constrained but noncontinuous 
+ grasp samplers. Overall, CAPGrasp is a sample-efficient solution when grasps must originate from specific directions, such as grasping in confined spaces.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MAJyj3V0_kI" title="CAPGrasp" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video. -->
+
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-full-width">
+      <h2 class="title is-3">Approach-constrained grasping from a table</h2>
+      <div class="publication-video">
+        <div class="content has-text-centered">
+          <video id="table-picking" autoplay controls muted preload loop playsinline>
+            <source src="resources/tablepicking.mp4"
+                    type="video/mp4">
+          </video>
+      </div>
+    </div>
+  </div>
+  <!--/ Paper video. -->
+
+</div>
+
+<div class="columns is-centered has-text-centered">
+  <div class="column is-full-width">
+    <h2 class="title is-3">Approach-constrained grasping from a shelf</h2>
+    <div class="publication-video">
+      <div class="content has-text-centered">
+        <video id="shelf-picking" autoplay controls muted preload loop playsinline>
+          <source src="resources/shelfpicking.mp4"
+                  type="video/mp4">
+        </video>
+    </div>
+  </div>
+</div>
+<!--/ Paper video. -->
+
+</div>
+
+
+
+
+</section>
+
+
+<!-- <section class="section">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
+      <div class="column is-full-width has-text-centered">
+        <h2 class="title is-3">Single-Image 3D Reconstruction</h2>
+
+        <h2 class="title is-5">Real Horse Images and Realistic Paintings</h2>
+        <div class="content has-text-justified">
+          <p>
+            After training, given a single image of a new instance, the model reconstructs articulated 3D shape and appearance of it, which can be animated and re-rendered from arbitrary viewpoints.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="horse-real" autoplay controls muted preload loop playsinline>
+            <source src="resources/RAL-web-video-compress.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <br>
+
+        <h2 class="title is-5">Generalisation to Abstract Horse Drawings and Artefacts</h2>
+        <div class="content has-text-justified">
+          <p>
+            The model also generalises to abstract drawings and artefacts, despite being trained only on real images.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="horse-real" autoplay controls muted preload loop playsinline>
+            <source src="resources/horse_abstract.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <br>
+
+        <h2 class="title is-5">Other Animal Categories: Giraffes, Zebras and Cows</h2>
+        <div class="content has-text-justified">
+          <p>
+            After finetuning, our model also generalises to various animal categories with highly different underlying shapes.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="horse-real" autoplay controls muted preload loop playsinline>
+            <source src="resources/other_animals.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <br>
+
+        <h2 class="title is-5">Frame-by-Frame Reconstruction on Videos</h2>
+        <div class="content has-text-justified">
+          <p>
+            We run the model on videos frame by frame, and obtain temporally consistent reconstructions.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="horse-real" autoplay controls muted preload loop playsinline style="max-width: 86%; display: block; margin: auto;">
+            <source src="resources/video_recon.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <br>
+
+      </div>
+    </div>
+
+  </div>
+</section> -->
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{weng2023capgrasp,
+  author    = {Weng, Zehang and Lu, Haofei and Lundell, Jens and Kragic, Danica},
+  title     = {{CAPGrasp}: An R3xSO(2)-equivariant Continuous Approach-Constrained Generative Grasp Sampler},
+  journal   = {arXiv preprint arXiv:2310.12113},
+  year      = {2023}
+}</code></pre>
+  </div>
+</section>
+
+<!-- <section class="section" id="Acknowledgements"> -->
+  <!-- <div class="container is-max-desktop content"> -->
+    <!-- <h2 class="title">Acknowledgements</h2> -->
+    <!-- <p> -->
+      <!-- We would like to thank the authors of <a href="https://github.com/NVlabs/nvdiffrec">nvdiffrec</a> for open-sourcing the code for DMTet and rendering. We are also grateful to Tengda Han, Shu Ishida, Dylan Campbell, Eldar Insafutdinov, Luke Melas-Kyriazi, Ragav Sachdeva and Sagar Vaze for insightful discussions, and Guanqi Zhan and Jaesung Huh for proofreading. -->
+    <!-- </p> -->
+    <!-- <p> -->
+      <!-- Shangzhe Wu is supported by Meta Research. Tomas Jakab is supported by ERC-CoG UNION 101001212. Christian Rupprecht is supported by VisualAI EP/T028572/1 and ERC-CoG UNION 101001212. Andrea Vedaldi is supported by ERC-CoG UNION 101001212. -->
+    <!-- </p> -->
+  <!-- </div> -->
+<!-- </section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This webpage template is adapted from <a
+            href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>, under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0 License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
