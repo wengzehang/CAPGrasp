@@ -1,6 +1,6 @@
 # CAPGrasp: An R3 x SO(2) Equivariant Continuous Approach-Constrained Generative Grasp Sampler
 
-This repository contains the PyTorch implementation of CAPGrasp. We offer tools such as the CAPGrasp Sampler, Evaluator, and constrained grasp refinement, along with pre-trained models. Additionally, we provide the object set and grasp dataset essential for training.
+This repository contains the PyTorch implementation of CAPGrasp. We offer tools such as the CAPGrasp Sampler, Evaluator, and constrained grasp refinement, along with trained models. Additionally, we provide the object partial point cloud dataset and grasp dataset essential for training.
 
 > **Note**: The IsaacGym environment used for evaluation will be released later.
 
