@@ -26,7 +26,7 @@ pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --e
 git clone git@github.com:erikwijmans/Pointnet2_PyTorch.git
 cd Pointnet2_PyTorch && pip install -r requirements.txt
 cd .. && pip install -r requirements.txt 
-pip install trimesh  # ==3.14.1
+pip install trimesh
 # Follow instructions to download the IsaacGym package
 cd isaacgym/python && pip install -e .
 ```
