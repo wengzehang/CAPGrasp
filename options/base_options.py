@@ -24,6 +24,13 @@ class BaseOptions:
             type=str,
             default='',
             help='path to root directory of the dataset.')
+        
+        self.parser.add_argument(
+            '--mesh_folder', '-m',
+            type=str,
+            default='',
+            help='path to root directory of the mesh folder.')
+        
         self.parser.add_argument('--num_objects_per_batch',
                                  type=int,
                                  default=1,

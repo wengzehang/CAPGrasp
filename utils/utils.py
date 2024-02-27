@@ -3,16 +3,15 @@ import os
 import sys
 import math
 import trimesh.transformations as tra
-# from constrained_6dof_graspnet.utils import sample
-
-# sys.path.append("/media/zehang/LaCie/zehang/ubuntu/project/GoNet-X/constrained_6dof_graspnet")
 from utils import sample
-# from constrained_6dof_graspnet.utils import sample
 import torch
 import yaml
 from easydict import EasyDict as edict
 import h5py
-import open3d as o3d
+try:
+    import open3d as o3d
+except:
+    print("can't import open3d")
 from scipy.spatial.transform import Rotation as R
 from scipy.spatial import distance_matrix
 import random

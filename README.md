@@ -9,25 +9,24 @@ We refer the reader to [our project page](https://wengzehang.github.io/CAPGrasp/
 ## Prerequisites
 
 - **Operating System**: Ubuntu 18.04 (tested), Ubuntu 20 (trained model also tested)
-- **Python**: 3.6
-- **PyTorch**: 1.10
-- **CUDA**: 10.0 (CUDA 11 has also been tested)
+- **Python**: 3.8
+- **PyTorch**: 1.13
+- **CUDA**: 11.7 (CUDA 10 has also been tested)
 
 ## Installation
 
 To set up the environment, follow these steps:
 
-```
+``` 0.7.1 lightning
 git clone git@github.com:wengzehang/CAPGrasp.git
 cd CAPGrasp
-conda create -n capnet python=3.6
-conda activate capnet
+conda create -n capnet python=3.8 cudatoolkit-dev=11 -c conda-forge
 pip install --upgrade pip setuptools wheel
-pip install torch==1.10.0+cu102 torchvision==0.11.0+cu102 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
+pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
 git clone git@github.com:erikwijmans/Pointnet2_PyTorch.git
 cd Pointnet2_PyTorch && pip install -r requirements.txt
 cd .. && pip install -r requirements.txt 
-pip install trimesh==3.14.1
+pip install trimesh  # ==3.14.1
 # Follow instructions to download the IsaacGym package
 cd isaacgym/python && pip install -e .
 ```
@@ -46,6 +45,7 @@ To access the pre-trained models, refer to the instructions in `checkpoints_2d/d
 ### Sampler Training
 
 Replace `$LOCALDATAPATH` with the path to the downloaded Acronym dataset.
+Replace `$LOCALMESHPATH` with the path to the downloaded mesh dataset.
 
 ```
 python train.py \
@@ -64,7 +64,8 @@ python train.py \
 --niter 10 \
 --latent_size 4 \
 --gpu_ids 0,1,2 \
---equivariant
+--equivariant \
+--continuous
 ```
 
 Monitor the training process using the Tensorboard log files stored in the `checkpoints_2d` directory.
@@ -73,7 +74,8 @@ Monitor the training process using the Tensorboard log files stored in the `chec
 
 ```
 python train.py \
---dataset_root_folder /media/zehang/LaCie/zehang/ubuntu/dataset/cong_orien_grasp_full/grasps \
+--dataset_root_folder $LOCALDATAPATH/grasps \
+--mesh_folder $LOCALMESHPATH/models \
 --arch evaluator \
 --clusters -prpc \
 --checkpoints_dir ./checkpoints_2d \
@@ -87,6 +89,7 @@ python train.py \
 --niter_decay 300 \
 --niter 10 \
 --gpu_ids 0
+
 ```
 
 ## Generating Refined Grasps
@@ -114,7 +117,3 @@ Here are examples of generated grasps with six different approach constraints:
 |:-----------------:|:-----------------:|
 |      (0,0,1)      |     (0,0,-1)      |
 
-
-## Evaluation in IsaacGym
-
-Details coming soon.

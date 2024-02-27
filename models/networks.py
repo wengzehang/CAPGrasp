@@ -6,9 +6,7 @@ import torch.nn.functional as F
 # from constrained_6dof_graspnet.models import losses
 from models import losses
 import sys
-sys.path.append("/media/zehang/LaCie/zehang/ubuntu/project/orienGrasp/Pointnet2_PyTorch")
-from pointnet2_ops_lib.pointnet2_ops import pointnet2_modules as pointnet2
-
+from pointnet2_ops import pointnet2_modules as pointnet2
 
 def get_scheduler(optimizer, opt):
     if opt.lr_policy == 'lambda':

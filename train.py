@@ -15,7 +15,6 @@ def main():
     opt = TrainOptions().parse()
     if opt == None:
         return
-
     data_loader = DataLoader(opt, caching=False)
     training_dataset, test_dataset, _ = data_loader.split_dataset(
         opt.dataset_split_ratio)

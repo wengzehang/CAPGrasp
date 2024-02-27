@@ -9,7 +9,7 @@ from utils import utils
 import glob
 # from renderer.online_object_renderer import OnlineObjectRenderer
 import threading
-np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
+# np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 
 
 class NoPositiveGraspsException(Exception):

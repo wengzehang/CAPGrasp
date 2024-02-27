@@ -226,19 +226,11 @@ class GraspEvaluatorData(BaseDataset):
         grasps.
         """
         num_clusters = self.opt.num_grasp_clusters
-
         if num_clusters <= 0:
             raise NoPositiveGraspsException
 
         json_dict = pickle.load(open(data_path, "rb"))
-
-        # TODO: clean later, we need to refine this if dataset is generated from other places; absolute path
-
-        # object_model = Object(json_dict['mesh/file'])
-        # object_model.rescale(json_dict['mesh/scale'])
-
-        # mesh_file = os.path.join("/local_storage/users/zehang/models_full/models-OBJ/models", json_dict['mesh/file'].split('/')[-1])
-        mesh_file = os.path.join("/media/zehang/LaCie/zehang/ubuntu/project/orienGrasp/models-OBJ/models", json_dict['mesh/file'].split('/')[-1])
+        mesh_file = os.path.join(self.opt.mesh_folder, json_dict['mesh/file'].split('/')[-1])
         object_model = Object(mesh_file)
         object_model.rescale(json_dict['mesh/scale'])
 
@@ -248,6 +240,7 @@ class GraspEvaluatorData(BaseDataset):
         object_model.vertices -= object_mean
 
         grasps = np.asarray(json_dict['grasps/transformations'])
+
         try:
             hard_negative_grasps = np.asarray(json_dict['grasps/hard_negative'])
         except:
@@ -274,7 +267,7 @@ class GraspEvaluatorData(BaseDataset):
                 indexes = np.where(cluster_indexes == i)[0]
                 output_grasps.append(grasps[indexes, :, :])
 
-            output_grasps = np.asarray(output_grasps)
+            output_grasps = np.asarray(output_grasps,dtype=object)
 
             return output_grasps
 
